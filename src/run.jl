@@ -4,6 +4,33 @@ parse_path(path_func::Function, T) = path_func(T)
 parse_path(path::String, T) = path 
 
 """
+Calculate thermodynamic properties of a crystal across a
+range of temperatures using the free energy cumulant expansion.
+
+All path-like parameters may be passed as a single string, or as a function 
+which takes on parameters (temperature) and returns a string. For example,
+'''julia
+make_ucposcar_path = (T) -> joinpath("/home/user", "infile.ucposcar$(T)")
+ucposcar_path = "/home/user/infile.ucposcar"
+'''
+
+Parameters:
+-----------
+- `temperatures::AbstractVector{<:Real}`: The temperatures at which to calculate the thermodynamic properties.
+- `outpath::Union{Function, String}`: The output path for the results.
+- `ucposcar_path::Union{Function, String}`: The path/function to the POSCAR file for the unit cell.
+- `ssposcar_path::Union{Function, String}`: The path/function to the POSCAR file for the supercell.
+- `ifc2_path::Union{Function, String}`: The path/function to the infile.forceconstant file (TDEP format).
+- `ifc3_path::Union{Function, String}`: The path/function to the infile.forceconstant file (TDEP format).
+- `ifc4_path::Union{Function, String}`: The path/function to the infile.forceconstant file (TDEP format).
+- `pot_cmds::Union{String, Vector{String}}`: The LAMMPS potential commands to calculate the potential energy. For example,
+    `pot_cmds = pot_cmds = ["pair_style lj/cut 6.955", "pair_coeff * * 0.0032135 2.782", "pair_modify shift yes"]`
+- `nconf::Int = 100_000`: The number of configurations to sample for the constant correction.
+- `nboot::Int = 2500`: The number of bootstrap samples to use for error estimation of the constant correction.
+- `size_study:Bool = false`: Whether to calculate the constant correction as a function of the number of samples (log-spaced).
+- `harmonic_q_mesh::AbstractVector{<:Integer} = [30, 30, 30]`: The q-mesh to use for the harmonic contribution.
+- `free_energy_q_mesh::AbstractVector{<:Integer} = [25, 25, 25]`: The q-mesh to use for the cumulant corrections.
+- `n_threads::Integer = Threads.nthreads()`: The number of threads to use for parallelization.
 """
 function crystal_thermodynamic_properties(
     temperatures::AbstractVector{<:Real},
@@ -21,7 +48,6 @@ function crystal_thermodynamic_properties(
     harmonic_q_mesh::AbstractVector{<:Integer} = [30,30,30],
     free_energy_q_mesh::AbstractVector{<:Integer} = [25,25,25],
     n_threads::Integer = Threads.nthreads(),
-    use_hot::Bool = false,
     kwargs...
 )
     all_ifcs = Vector{IFC2}(undef, length(temperatures))
@@ -56,7 +82,7 @@ function crystal_thermodynamic_properties(
             quantum = quantum,
             harmonic_q_mesh = harmonic_q_mesh,
             free_energy_q_mesh = free_energy_q_mesh,
-            use_hot = use_hot
+            use_hot = false
         )
 
         all_ucs[i] = CrystalStructure(ucposcar_path_T)
