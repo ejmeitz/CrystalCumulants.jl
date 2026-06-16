@@ -6,13 +6,13 @@ This package depends on LatticeDynamicsToolkit.jl which is an unregistered packa
 
 ```julia
 using Pkg
-Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.0")
+Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.1")
 ```
 
 Then install CumulantAnalysis.jl into the same environment as LatticeDynamicsToolkit.jl
 
 ```julia
-Pkg.add(; url = "https://github.com/ejmeitz/CumulantAnalysis.jl.git", rev = "v0.1.0")
+Pkg.add(; url = "https://github.com/ejmeitz/CumulantAnalysis.jl.git", rev = "v0.1.1")
 ```
 
 Note that this package automatically installs LAMMPS and if a GPU is detected it will install a GPU version of LAMMPS. If you have compilation errors related to this open an issue. The GPU is not used, but can still cause headaches at compile time if your Linux is too "old".
