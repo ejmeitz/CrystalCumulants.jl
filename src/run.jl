@@ -50,7 +50,14 @@ function crystal_thermodynamic_properties(
     n_threads::Integer = Threads.nthreads(),
 )
 
+    @info "Calculating Thermodynamic Properties with $n_threads threads."
+
+    if n_threads > Threads.nthreads()
+        @warn "You asked for $n_threads threads, but only $(Threads.nthreads()) are available. Be sure to set JULIA_NUM_THREADS in your environment."
+    end
+
     for (i,T) in enumerate(temperatures)
+        @info "Running T = $(T) K"
 
         outpath_T = parse_path(outpath, T)
         ifc2_path_T = parse_path(ifc2_path, T)

@@ -11,7 +11,8 @@ The discussion below pertains to the Julia package. Please see the README in the
 
 > [!TIP]
 > 1) Be sure to set `JULIA_NUM_THREADS` or `PYTHON_JULIACALL_THREADS` in your environment to enable multi-threading of the code!
-> 2) The
+> 2) Always use the primitive cell. The number of atoms in the primitive cell dicates the computational cost and RAM usage (lower better).
+> 3) The `free_energy_q_mesh` and `nconf` dictate runtime for a given primitive cell. It is recommended to run a convergence study to asses what grid size and how many samples are needed to get converged results and minimize runtime.
 
 ### Installation
 
