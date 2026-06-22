@@ -6,8 +6,6 @@ A fast implementation of the free energy cumulant expansion for crystals. The co
 - `make_stdep_ifcs` : Computes sTDEP IFCs (2nd through 4th order) for a specific temperature
 - `crystal_thermodynamic_properties` : Using the sTDEP IFCs computes the quantum-anharmonic thermodynamic properties using the free energy cumulant expansion.
 
-The discussion below pertains to the Julia package. Please see the [Python documentation](https://ejmeitz.github.io/CrystalCumulants.jl/python/) or the README in the `python` directory for more details on installing and using the Python package. Full documentation: [https://ejmeitz.github.io/CrystalCumulants.jl](https://ejmeitz.github.io/CrystalCumulants.jl).
-
 > [!NOTE]
 > The energy from polar interactions is not accounted for. Even if this interaction is present in the `infile.forceconstant` file it will be ignored. The cumulant expansion theory is easily modified to incorporate the polar contribution, but the corresponding code was not implemented or tested.
 
@@ -15,6 +13,8 @@ The discussion below pertains to the Julia package. Please see the [Python docum
 > 1) Be sure to set `JULIA_NUM_THREADS` or `PYTHON_JULIACALL_THREADS` in your environment to enable multi-threading of the code!
 > 2) Always use the primitive cell. The number of atoms in the primitive cell dicates the computational cost and RAM usage (lower better).
 > 3) The `free_energy_q_mesh` and `nconf` dictate runtime for a given primitive cell. It is recommended to run a convergence study to asses what grid size and how many samples are needed to get converged results and minimize runtime.
+
+The discussion below pertains to the Julia package. Please see the [Python documentation](https://ejmeitz.github.io/CrystalCumulants.jl/python/) or the README in the `python` directory for more details on installing and using the Python package. Full documentation: [https://ejmeitz.github.io/CrystalCumulants.jl](https://ejmeitz.github.io/CrystalCumulants.jl).
 
 ### Installation
 
@@ -33,12 +33,13 @@ Pkg.add(; url = "https://github.com/ejmeitz/CrystalCumulants.jl.git", rev = "v0.
 
 Note that this package automatically installs LAMMPS and if a GPU is detected it will install a GPU version of LAMMPS. If you have compilation errors related to this open an issue. The GPU is not used, but can still cause headaches at compile time if your Linux is too "old".
 
-
 ### Citation
 
 Coming soon.
 
-### Solid Neon Example
+### Julia Solid Neon Example
+
+More details about the theory and the Python package can be found in the [documentation](https://ejmeitz.github.io/CrystalCumulants.jl)
 
 To begin clone the repo, it contains some input files.
 ```

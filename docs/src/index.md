@@ -1,6 +1,4 @@
-# CrystalCumulants.jl
-
-@id Home
+# [CrystalCumulants.jl](@id Home)
 
 A fast implementation of the free energy cumulant expansion for crystals. The code is written in Julia, but we also provide a Python wrapper. There are two entry points to the code:
 
@@ -18,8 +16,7 @@ A fast implementation of the free energy cumulant expansion for crystals. The co
 ## Getting started
 
 - [Theory](@ref Theory) — background on the cumulant expansion and how it maps to the implementation
-- [Julia](@ref Julia) — installation and solid Neon example
-- [Python](@ref Python) — Python wrapper installation and solid Neon example
+- [Example](@ref Example) — installation, API, and solid Neon walkthrough (Julia and Python)
 
 ## Citation
 
