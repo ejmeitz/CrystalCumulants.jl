@@ -109,6 +109,8 @@ def make_stdep_ifcs(
     T: float,
     maximum_frequency: float,
     quantum: bool,
+    rc3: float,
+    rc4: float,
     **kwargs,
 ) -> None:
     """Generate self-consistent TDEP force constants with sTDEP.
@@ -126,19 +128,23 @@ def make_stdep_ifcs(
     n_iter:
         Number of self-consistent sTDEP iterations.
     r_cut:
-        Pair potential cutoff used by sTDEP.
+        Pair potential cutoff used by sTDEP for 2nd-order IFCs.
     T:
         Temperature (Kelvin).
     maximum_frequency:
         Maximum frequency used for the initial IFC guess.
     quantum:
         Whether to sample quantum or classical configurations.
+    rc3:
+        Cutoff radius for 3rd-order IFC fitting.
+    rc4:
+        Cutoff radius for 4th-order IFC fitting.
     **kwargs:
         Additional keyword arguments forwarded to the underlying sTDEP call.
 
     Notes
     -----
-    Output files are written under ``outdir``.
+    Output files are written under ``outdir``, including 2nd- through 4th-order IFCs.
     """
     _, ca = get_jl()
 
@@ -152,5 +158,7 @@ def make_stdep_ifcs(
         T,
         maximum_frequency,
         quantum,
+        rc3,
+        rc4,
         **call_kwargs(**kwargs),
     )

@@ -4,7 +4,7 @@
 
 A fast implementation of the free energy cumulant expansion for crystals. The code is written in Julia, but we also provide a Python wrapper. There are two entry points to the code:
 
-- `make_stdep_ifcs` — computes sTDEP IFCs for a specific temperature
+- `make_stdep_ifcs` — computes sTDEP IFCs (2nd through 4th order) for a specific temperature
 - `crystal_thermodynamic_properties` — using the sTDEP IFCs, computes quantum-anharmonic thermodynamic properties via the free energy cumulant expansion
 
 !!! note

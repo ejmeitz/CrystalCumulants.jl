@@ -6,19 +6,14 @@
 
 - Linux (macOS may work; Windows is not supported)
 - Julia 1.10+
-- [LatticeDynamicsToolkit.jl](https://github.com/ejmeitz/LatticeDynamicsToolkit.jl) in the same environment
 - Set `JULIA_NUM_THREADS` before launching Julia for parallel execution
 
 ## Installation
 
 ```julia
 using Pkg
-Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.0")
-Pkg.add(; url = "https://github.com/ejmeitz/CumulantAnalysis.jl.git", rev = "v0.1.0")
-```
-
-```julia
-using CumulantAnalysis
+Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.2")
+Pkg.add(; url = "https://github.com/ejmeitz/CrystalCumulants.jl.git", rev = "v0.1.1")
 ```
 
 ## API
@@ -37,7 +32,9 @@ make_stdep_ifcs(
     r_cut,
     T,
     maximum_frequency,
-    quantum;
+    quantum,
+    rc3,
+    rc4;
     kwargs...
 )
 ```
@@ -53,9 +50,11 @@ make_stdep_ifcs(
 | `T` | Temperature (K) |
 | `maximum_frequency` | Maximum frequency for the initial IFC guess |
 | `quantum` | Sample quantum (`true`) or classical (`false`) configurations |
+| `rc3` | Cutoff radius for 3rd-order IFC fitting |
+| `rc4` | Cutoff radius for 4th-order IFC fitting |
 | `kwargs...` | Additional keyword arguments forwarded to sTDEP (e.g. `mix`, `nconf_init`, `max_configs`) |
 
-Output files are written under `outdir`. This step produces 2nd-order IFCs only; 3rd- and 4th-order IFCs must be extracted separately (see below).
+Output files are written under `outdir`. This step produces 2nd-4th order sTDEP IFCs.
 
 ### `crystal_thermodynamic_properties`
 
@@ -84,7 +83,7 @@ crystal_thermodynamic_properties(
 All path-like parameters may be a `String` or a function `(T) -> path` for temperature-dependent inputs:
 
 ```julia
-ucposcar_path = (T) -> joinpath("/data", "T$(Int(T))", "infile.ucposcar")
+ucposcar_path = (T) -> joinpath("/home/data", "T$(Int(T))", "infile.ucposcar")
 ```
 
 | Keyword | Default | Description |
@@ -108,19 +107,19 @@ If `size_study = true`, an additional file reports the 0th-order correction as a
 Clone the repository for bundled input files:
 
 ```
-git clone --depth 1 --branch v0.1.0 https://github.com/ejmeitz/CumulantAnalysis.jl.git
+git clone --depth 1 --branch v0.1.0 https://github.com/ejmeitz/CrystalCumulants.jl.git
 ```
 
 ### sTDEP IFCs
 
-The first step is to obtain 2nd-, 3rd-, and 4th-order force constants from sTDEP. Skip to [Thermodynamic properties](#Thermodynamic-properties) if you already have IFCs. The method expects self-consistent phonons (sTDEP or SSCHA); MD-TDEP or finite-difference IFCs are less accurate.
+The first step is to obtain 2nd-, 3rd-, and 4th-order force constants from sTDEP. Skip to [Thermodynamic properties](#Thermodynamic-properties) if you already have IFCs. The method expects self-consistent phonons (sTDEP or SSCHA); MD-TDEP or finite-difference IFCs are far less accurate.
 
-An in-depth sTDEP tutorial is [here](https://github.com/tdep-developers/tdep-tutorials/tree/main/02_sampling). A multi-volume, multi-temperature workflow used in the paper is in [`workflows/neon_lattice_params_stdep.jl`](https://github.com/ejmeitz/CumulantAnalysis.jl/blob/main/workflows/neon_lattice_params_stdep.jl).
+An in-depth sTDEP tutorial is [here](https://github.com/tdep-developers/tdep-tutorials/tree/main/02_sampling). A multi-volume, multi-temperature workflow used in the paper is in [`workflows/neon_lattice_params_stdep.jl`](https://github.com/ejmeitz/CrystalCumulants.jl/blob/main/workflows/neon_lattice_params_stdep.jl).
 
-Precomputed force constants are in [`data/stdep_results`](https://github.com/ejmeitz/CumulantAnalysis.jl/tree/main/data/stdep_results) (`iter009` folder; ~1 minute to reproduce).
+Precomputed force constants are in [`data/stdep_results`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/stdep_results) (`iter009` folder; ~2 minutes to reproduce).
 
 ```julia
-using CumulantAnalysis
+using CrystalCumulants
 
 repo_root = "<path-to-repo-root>"  # UPDATE
 outpath = "<whatever-directory-you-want>"  # UPDATE
@@ -128,7 +127,13 @@ outpath = "<whatever-directory-you-want>"  # UPDATE
 T = 24  # Kelvin
 
 r_cut = 6.955
-pot_cmds = ["pair_style lj/cut $(r_cut)", "pair_coeff * * 0.0032135 2.782", "pair_modify shift yes"]
+rc3 = r_cut # cutoff for third-order IFCs
+rc4 = 4.0 # cutoff for fourth-order IFCs
+pot_cmds = [
+    "pair_style lj/cut $(r_cut)",
+    "pair_coeff * * 0.0032135 2.782",
+    "pair_modify shift yes"
+]
 
 n_iter = 10
 maximum_frequency = 2.5
@@ -152,39 +157,19 @@ make_stdep_ifcs(
     T,
     maximum_frequency,
     quantum,
+    rc3,
+    rc4,
 )
 ```
-
-### 3rd and 4th order IFCs
-
-`make_stdep_ifcs` only computes 2nd-order IFCs. Use a separate TDEP installation or LatticeDynamicsToolkit.jl for 3rd- and 4th-order IFCs (~a few minutes depending on thread count).
-
-```julia
-import LatticeDynamicsToolkit.TDEPWrapper: execute, ExtractForceConstants
-
-rc2 = 6.955
-rc3 = 6.955
-rc4 = 4.0
-
-efc = ExtractForceConstants(
-    secondorder_cutoff = rc2,
-    thirdorder_cutoff = rc3,
-    fourthorder_cutoff = rc4,
-)
-rundir = joinpath(outpath, "iter009")  # update if you changed n_iter
-execute(efc, rundir, Threads.nthreads())
-```
-
-Rename `outfile.*` to `infile.*` if needed before the next step.
 
 ### Thermodynamic properties
 
-Use IFCs from above or the bundled set in [`data/thermo_inputs`](https://github.com/ejmeitz/CumulantAnalysis.jl/tree/main/data/thermo_inputs). Expected free energy at 24 K is roughly **−0.0179270 eV/atom** (stochastic; first few decimals should match). ~3 minutes on 40 cores. Reference results: [`data/thermo_results`](https://github.com/ejmeitz/CumulantAnalysis.jl/tree/main/data/thermo_results) (25×25×25 free-energy mesh).
+Use IFCs from above or the bundled set in [`data/thermo_inputs`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/thermo_inputs). Expected free energy at 24 K is roughly **−0.0179270 eV/atom** (stochastic; first few decimals should match). ~3 minutes on 40 cores. Reference results: [`data/thermo_results`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/thermo_results) (25×25×25 free-energy mesh).
 
-A multi-temperature workflow is in [`workflows/neon.jl`](https://github.com/ejmeitz/CumulantAnalysis.jl/blob/main/workflows/neon.jl).
+A multi-temperature workflow is in [`workflows/neon.jl`](https://github.com/ejmeitz/CrystalCumulants.jl/blob/main/workflows/neon.jl).
 
 ```julia
-using CumulantAnalysis
+using CrystalCumulants
 
 repo_root = "<path-to-repo-root>"  # UPDATE
 outpath = "<whatever-directory-you-want>"  # UPDATE
@@ -193,7 +178,11 @@ basepath = joinpath(repo_root, "data", "thermo_inputs")
 T = 24  # Kelvin
 
 r_cut = 6.955
-pot_cmds = ["pair_style lj/cut $(r_cut)", "pair_coeff * * 0.0032135 2.782", "pair_modify shift yes"]
+pot_cmds = [
+    "pair_style lj/cut $(r_cut)",
+    "pair_coeff * * 0.0032135 2.782",
+    "pair_modify shift yes"
+]
 
 nconf = 100_000
 nboot = 5000
@@ -230,9 +219,9 @@ crystal_thermodynamic_properties(
 
 | Script | Description |
 |--------|-------------|
-| [`workflows/neon.jl`](https://github.com/ejmeitz/CumulantAnalysis.jl/blob/main/workflows/neon.jl) | Multi-temperature Neon thermodynamics |
-| [`workflows/neon_lattice_params_stdep.jl`](https://github.com/ejmeitz/CumulantAnalysis.jl/blob/main/workflows/neon_lattice_params_stdep.jl) | Volume/temperature sTDEP loop (paper workflow) |
-| [`workflows/silicon.jl`](https://github.com/ejmeitz/CumulantAnalysis.jl/blob/main/workflows/silicon.jl) | Silicon example |
-| [`workflows/kmesh_studies.jl`](https://github.com/ejmeitz/CumulantAnalysis.jl/blob/main/workflows/kmesh_studies.jl) | q-mesh convergence studies |
+| [`workflows/neon.jl`](https://github.com/ejmeitz/CrystalCumulants.jl/blob/main/workflows/neon.jl) | Multi-temperature Neon thermodynamics |
+| [`workflows/neon_lattice_params_stdep.jl`](https://github.com/ejmeitz/CrystalCumulants.jl/blob/main/workflows/neon_lattice_params_stdep.jl) | Volume/temperature sTDEP loop (paper workflow) |
+| [`workflows/silicon.jl`](https://github.com/ejmeitz/CrystalCumulants.jl/blob/main/workflows/silicon.jl) | Silicon example |
+| [`workflows/kmesh_studies.jl`](https://github.com/ejmeitz/CrystalCumulants.jl/blob/main/workflows/kmesh_studies.jl) | q-mesh convergence studies |
 
 See also the [Theory](@ref Theory) page and [Python](@ref Python) wrapper.

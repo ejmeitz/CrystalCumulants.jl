@@ -1,6 +1,6 @@
 from os.path import join
 
-from cumulant_analysis import crystal_thermodynamic_properties
+from cumulant_analysis import crystal_thermodynamic_properties, make_stdep_ifcs
 
 f_kmesh = [15, 15, 15]
 nconf = 100_000
@@ -8,6 +8,7 @@ nboot = 5000
 maximum_frequency = 2.5 # THz
 n_iter = 10
 r_cut = 6.955
+rc4 = 4.0
 
 quantum = True
 base_outpath = "/home/emeitz/Neon_ANALYTICAL_PIMD"
@@ -49,7 +50,9 @@ for seed in range(n_seeds):
             r_cut,
             T,
             maximum_frequency,
-            quantum
+            quantum,
+            r_cut,
+            rc4,
         )
 
     # GET THERMO PROPERTIES

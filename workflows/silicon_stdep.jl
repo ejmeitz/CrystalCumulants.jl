@@ -25,6 +25,8 @@ for T in Ts
         r_cut,
         T,
         maximum_frequency,
-        quantum
+        quantum,
+        r_cut,
+        r_cut,
     )
 end

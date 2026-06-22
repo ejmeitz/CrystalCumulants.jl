@@ -32,16 +32,21 @@ pot_cmds = [
     "pair_modify shift yes",
 ]
 
+r_cut = 6.955
+rc4 = 4.0
+
 make_stdep_ifcs(
     "data/stdep_inputs/infile.ucposcar",
     "data/stdep_inputs/infile.ssposcar",
     "out/stdep",
     pot_cmds,
     n_iter=10,
-    r_cut=6.955,
+    r_cut=r_cut,
     T=24.0,
     maximum_frequency=2.5,
     quantum=True,
+    rc3=r_cut,
+    rc4=rc4,
 )
 
 crystal_thermodynamic_properties(
