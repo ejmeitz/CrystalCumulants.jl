@@ -1,10 +1,12 @@
 # CumulantAnalysis.jl
 
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://ejmeitz.github.io/CumulantAnalysis.jl)
+
 A fast implementation of the free energy cumulant expansion for crystals. The code is written in Julia, but we also provide a Python wrapper. There are two entry points to the code:
 - `make_stdep_ifcs` : Computes sTDEP IFCs for a specific temperature
 - `crystal_thermodynamic_properties` : Using the sTDEP IFCs computes the quantum-anharmonic thermodynamic properties using the free energy cumulant expansion.
 
-The discussion below pertains to the Julia package. Please see the README in the `python` directory for more details on installing and using the Python package.
+The discussion below pertains to the Julia package. Please see the [Python documentation](https://ejmeitz.github.io/CumulantAnalysis.jl/python/) or the README in the `python` directory for more details on installing and using the Python package. Full documentation: [https://ejmeitz.github.io/CumulantAnalysis.jl](https://ejmeitz.github.io/CumulantAnalysis.jl).
 
 > [!NOTE]
 > The energy from polar interactions is not accounted for. Even if this interaction is present in the `infile.forceconstant` file it will be ignored. The cumulant expansion theory is easily modified to incorporate the polar contribution, but the corresponding code was not implemented or tested.
