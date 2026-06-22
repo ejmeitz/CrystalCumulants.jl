@@ -29,7 +29,9 @@ ssposcar_path = (N) -> joinpath(structure_basepath(N), "infile.ssposcar")
 #         r_cut,
 #         T,
 #         maximum_frequency,
-#         quantum
+#         quantum,
+#         r_cut,
+#         r_cut,
 #     )
 # end
 

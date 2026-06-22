@@ -50,7 +50,14 @@ function crystal_thermodynamic_properties(
     n_threads::Integer = Threads.nthreads(),
 )
 
+    @info "Calculating Thermodynamic Properties with $n_threads threads."
+
+    if n_threads > Threads.nthreads()
+        @warn "You asked for $n_threads threads, but only $(Threads.nthreads()) are available. Be sure to set JULIA_NUM_THREADS in your environment."
+    end
+
     for (i,T) in enumerate(temperatures)
+        @info "Running T = $(T) K"
 
         outpath_T = parse_path(outpath, T)
         ifc2_path_T = parse_path(ifc2_path, T)
@@ -84,6 +91,25 @@ function crystal_thermodynamic_properties(
 end
 
 """
+Generate self-consistent TDEP force constants with sTDEP, including 2nd- through
+4th-order IFCs.
+
+Parameters:
+-----------
+- `ucposcar_path::String`: Path to the unit-cell POSCAR file (TDEP format).
+- `ssposcar_path::String`: Path to the supercell POSCAR file (TDEP format).
+- `outdir::String`: Output directory for sTDEP results.
+- `pot_cmds::Vector{String}`: LAMMPS potential commands.
+- `n_iter::Int`: Number of self-consistent sTDEP iterations.
+- `r_cut::Real`: Pair potential cutoff used by sTDEP for 2nd-order IFCs.
+- `T::Real`: Temperature (K).
+- `maximum_frequency::Real`: Maximum frequency for the initial IFC guess.
+- `quantum::Bool`: Sample quantum (`true`) or classical (`false`) configurations.
+- `rc3::Float64`: Cutoff radius for 3rd-order IFC fitting.
+- `rc4::Float64`: Cutoff radius for 4th-order IFC fitting.
+- `kwargs...`: Additional keyword arguments forwarded to sTDEP (e.g. `mix`, `nconf_init`, `max_configs`).
+
+Output files are written under `outdir`.
 """
 function make_stdep_ifcs(
     ucposcar_path::String,
@@ -95,6 +121,8 @@ function make_stdep_ifcs(
     T::Real,
     maximum_frequency::Real,
     quantum::Bool,
+    rc3::Float64,
+    rc4::Float64;
     kwargs...
 )
 
@@ -114,6 +142,8 @@ function make_stdep_ifcs(
         T,
         maximum_frequency;
         quantum = quantum,
+        rc3 = rc3,
+        rc4 = rc4,
         kwargs...
     )
 

@@ -1,4 +1,4 @@
-module CumulantAnalysis
+module CrystalCumulants
 
 using DataFrames
 using AtomsCalculators
@@ -29,4 +29,4 @@ include("bootstrap.jl")
 include("estimate.jl")
 include("run.jl")
 
-end # CumulantAnalysis
+end # CrystalCumulants

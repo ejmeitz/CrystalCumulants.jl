@@ -1,5 +1,21 @@
 # CumulantAnalysis.jl
 
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://ejmeitz.github.io/CumulantAnalysis.jl)
+
+A fast implementation of the free energy cumulant expansion for crystals. The code is written in Julia, but we also provide a Python wrapper. There are two entry points to the code:
+- `make_stdep_ifcs` : Computes sTDEP IFCs (2nd through 4th order) for a specific temperature
+- `crystal_thermodynamic_properties` : Using the sTDEP IFCs computes the quantum-anharmonic thermodynamic properties using the free energy cumulant expansion.
+
+The discussion below pertains to the Julia package. Please see the [Python documentation](https://ejmeitz.github.io/CumulantAnalysis.jl/python/) or the README in the `python` directory for more details on installing and using the Python package. Full documentation: [https://ejmeitz.github.io/CumulantAnalysis.jl](https://ejmeitz.github.io/CumulantAnalysis.jl).
+
+> [!NOTE]
+> The energy from polar interactions is not accounted for. Even if this interaction is present in the `infile.forceconstant` file it will be ignored. The cumulant expansion theory is easily modified to incorporate the polar contribution, but the corresponding code was not implemented or tested.
+
+> [!TIP]
+> 1) Be sure to set `JULIA_NUM_THREADS` or `PYTHON_JULIACALL_THREADS` in your environment to enable multi-threading of the code!
+> 2) Always use the primitive cell. The number of atoms in the primitive cell dicates the computational cost and RAM usage (lower better).
+> 3) The `free_energy_q_mesh` and `nconf` dictate runtime for a given primitive cell. It is recommended to run a convergence study to asses what grid size and how many samples are needed to get converged results and minimize runtime.
+
 ### Installation
 
 This package depends on LatticeDynamicsToolkit.jl which is an unregistered package and requires Linux (macOS might work, Windows will not). To install in your chosen environment run:
@@ -16,6 +32,7 @@ Pkg.add(; url = "https://github.com/ejmeitz/CumulantAnalysis.jl.git", rev = "v0.
 ```
 
 Note that this package automatically installs LAMMPS and if a GPU is detected it will install a GPU version of LAMMPS. If you have compilation errors related to this open an issue. The GPU is not used, but can still cause headaches at compile time if your Linux is too "old".
+
 
 ### Citation
 
@@ -44,6 +61,7 @@ T = 24 # Kelvin
 
 # Potential Definition (LAMMPS Commands)
 r_cut = 6.955
+rc4 = 4.0  # cutoff for fourth-order IFCs
 pot_cmds = ["pair_style lj/cut $(r_cut)", "pair_coeff * * 0.0032135 2.782", "pair_modify shift yes"]
 
 # sTDEP Parameters
@@ -69,26 +87,11 @@ make_stdep_ifcs(
     r_cut,
     T,
     maximum_frequency,
-    quantum
+    quantum,
+    r_cut,
+    rc4,
 )
 ```
-
-##### 3rd and 4th Order IFCs
-This has only computed the second-order IFCs. Now you can use a separate TDEP installation or LatticeDynamicsToolkit.jl to get the 3rd and 4th order IFCs. This will take a couple of minutes depending how many threads you have.
-
-```julia
-import LatticeDynamicsToolkit.TDEPWrapper: execute, ExtractForceConstants
-
-rc2 = 6.955
-rc3 = 6.955
-rc4 = 4.0
-
-efc = ExtractForceConstants(secondorder_cutoff = rc2, thirdorder_cutoff = rc3, fourthorder_cutoff = rc4)
-rundir = joinpath(outpath, "iter009") # Update if you changed n_iter above.
-execute(efc, rundir, Threads.nthreads())
-```
-
-If you want to use the IFCs from this result, you might have to rename them from `outfile.*` to `infile.*` and update the paths for the next section.
 
 ##### Thermodynamic Properties
 The next step is to compute the thermodynamic properties. You can use the IFCs from above (make sure filenames match paths in this example) or use the IFCs [here](data/thermo_inputs). This script will create an output file for each thermodynamic property (F, U, S, Cv) broken down into the harmonic, 0th, 1st and 2nd order parts. Only the 0th order correction has an associated error. If `size_study` is set to `true` an additional output will contain the 0-th order correction as a function of the number of samples. This can be useful to detect convergence. A full workflow (used in the paper) which loops over multiple temperatures can be found [here](workflows/neon.jl).  

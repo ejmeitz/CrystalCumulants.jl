@@ -3,6 +3,7 @@ using CumulantAnalysis
 
 Ts = [4,6,8,10,12,14,16,18,20,22,24]
 r_cut = 6.955
+rc4 = 4.0
 pot_cmds = ["pair_style lj/cut $(r_cut)", "pair_coeff * * 0.0032135 2.782", "pair_modify shift yes"]
 
 quantum = true
@@ -31,7 +32,9 @@ for i in 1:n_lattice_params
             r_cut,
             T,
             maximum_frequency,
-            quantum
+            quantum,
+            r_cut,
+            rc4,
         )
     end
 end
