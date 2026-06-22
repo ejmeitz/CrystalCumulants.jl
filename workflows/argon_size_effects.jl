@@ -1,4 +1,4 @@
-using CumulantAnalysis
+using CrystalCumulants
 
 # Could technically just remap the 4 UC IFCs, but this is easy enough
 
@@ -17,7 +17,7 @@ structure_basepath = (N) -> "/home/emeitz/scripts/TDEP/LJ/size_effects/80K/$(N)U
 ucposcar_path = (N) -> joinpath(structure_basepath(N), "infile.ucposcar")
 ssposcar_path = (N) -> joinpath(structure_basepath(N), "infile.ssposcar")
 
-# ifc_outpath = (N) -> "/mnt/merged/emeitz/CumulantAnalysisTest/LJ_sTDEP_SIZE_EFFECTS/N$(N)_T$(T)"
+# ifc_outpath = (N) -> "/mnt/merged/emeitz/CrystalCumulantsTest/LJ_sTDEP_SIZE_EFFECTS/N$(N)_T$(T)"
 
 # for N in Ns
 #     make_stdep_ifcs(
@@ -41,12 +41,12 @@ nboot = 5_000
 Ns = [4,5,6]
 
 # sTDEP IFCs
-stdep_basepath = (N) -> "/mnt/merged/emeitz/CumulantAnalysisTest/LJ_sTDEP_SIZE_EFFECTS/N$(N)_T80/iter009"
+stdep_basepath = (N) -> "/mnt/merged/emeitz/CrystalCumulantsTest/LJ_sTDEP_SIZE_EFFECTS/N$(N)_T80/iter009"
 ifc2_path = (N) -> "$(stdep_basepath(N))/infile.forceconstant"
 ifc3_path = (N) -> "$(stdep_basepath(N))/infile.forceconstant_thirdorder"
 ifc4_path = (N) -> "$(stdep_basepath(N))/infile.forceconstant_fourthorder"
 
-thermo_outpath = (N) -> joinpath("/mnt/merged/emeitz/CumulantAnalysisTest/LJ_SIZE_EFFECTS_80K/", "N$(N)")
+thermo_outpath = (N) -> joinpath("/mnt/merged/emeitz/CrystalCumulantsTest/LJ_SIZE_EFFECTS_80K/", "N$(N)")
 for N in Ns
 
     crystal_thermodynamic_properties(

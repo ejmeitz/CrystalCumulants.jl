@@ -1,5 +1,5 @@
 # Runs sTDEP for all the lattice parameter and temperature combinations
-using CumulantAnalysis
+using CrystalCumulants
 
 Ts = [1400,1500,1600]
 sw_pot = "/home/emeitz/software/lammps/potentials/Si.sw"
@@ -11,7 +11,7 @@ n_lattice_params = 10
 n_iter = 10
 maximum_frequency = 18 # THz
 
-base_outpath = (T) -> "/mnt/merged/emeitz/CumulantAnalysisTest/Silicon_HighT_sTDEP_IFCs/T$(T)"
+base_outpath = (T) -> "/mnt/merged/emeitz/CrystalCumulantsTest/Silicon_HighT_sTDEP_IFCs/T$(T)"
 structure_basepath = "/mnt/merged/emeitz/SW_sTDEP"
 
 for T in Ts

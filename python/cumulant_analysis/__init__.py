@@ -1,4 +1,4 @@
-"""Python wrapper for CumulantAnalysis.jl."""
+"""Python wrapper for CrystalCumulants.jl."""
 
 from cumulant_analysis.api import (
     crystal_thermodynamic_properties,

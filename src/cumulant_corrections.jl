@@ -28,7 +28,7 @@ function CumulantData(V, V₂, V₃, V₄, V_ref, T, ::Val{0}, ce::AnalyticalEst
 
     X = V₀_rv(ce, V, V₂, V₃, V₄)
     μX = mean(X)
-    β = 1 / (CumulantAnalysis.kB * T)
+    β = 1 / (CrystalCumulants.kB * T)
 
     V₀ = μX
     ∂V₀ = ∂A_∂T(X, V_ref, T)

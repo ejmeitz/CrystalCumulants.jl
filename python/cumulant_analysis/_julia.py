@@ -44,9 +44,9 @@ def get_jl():
 
     import juliacall
 
-    jl = juliacall.newmodule("CumulantAnalysisPy")
+    jl = juliacall.newmodule("CrystalCumulantsPy")
     _report_julia_threads(jl)
-    jl.seval("using CumulantAnalysis")
+    jl.seval("using CrystalCumulants")
     jl.seval("using PythonCall")
     jl.seval("""
     function _path_from_py(f)
@@ -63,7 +63,7 @@ def get_jl():
     """)
 
     _JL = jl
-    _CA = jl.CumulantAnalysis
+    _CA = jl.CrystalCumulants
     return _JL, _CA
 
 

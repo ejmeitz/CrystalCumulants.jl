@@ -1,11 +1,11 @@
-using CumulantAnalysis
+using CrystalCumulants
 
 
 nconf = 100_000 
 nboot = 5000
 
 quantum = true
-base_outpath = "/mnt/merged/emeitz/CumulantAnalysisTest/Neon_ThermalExpansion_Runs"
+base_outpath = "/mnt/merged/emeitz/CrystalCumulantsTest/Neon_ThermalExpansion_Runs"
 
 Ts = [4,6,8,10,12,14,16,18,20,22,24]
 pot_cmds = ["pair_style lj/cut 6.955", "pair_coeff * * 0.0032135 2.782", "pair_modify shift yes"]
@@ -15,7 +15,7 @@ n_trial_lattice_constants = 12
 for i in 1:n_trial_lattice_constants
 
     ## sTDEP IFCs
-    ifc_basepath = (T) -> "/mnt/merged/emeitz/CumulantAnalysisTest/Neon_ThermalExpansion_IFCs_sTDEP/a$(i)/T$(T)/iter009"
+    ifc_basepath = (T) -> "/mnt/merged/emeitz/CrystalCumulantsTest/Neon_ThermalExpansion_IFCs_sTDEP/a$(i)/T$(T)/iter009"
     ucposcar_path = (T) -> joinpath(ifc_basepath(T), "infile.ucposcar")
     ssposcar_path = (T) -> joinpath(ifc_basepath(T), "infile.ssposcar")
     ifc2_path = (T) -> joinpath(ifc_basepath(T), "infile.forceconstant")

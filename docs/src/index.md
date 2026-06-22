@@ -1,4 +1,4 @@
-# CumulantAnalysis.jl
+# CrystalCumulants.jl
 
 @id Home
 

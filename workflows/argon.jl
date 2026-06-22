@@ -1,10 +1,10 @@
-using CumulantAnalysis
+using CrystalCumulants
 
 nconf = 100_000 
 nboot = 5_000
 
 quantum = false
-base_outpath = "/mnt/merged/emeitz/CumulantAnalysisTest/LJ_ANALYTICAL_sTDEP"
+base_outpath = "/mnt/merged/emeitz/CrystalCumulantsTest/LJ_ANALYTICAL_sTDEP"
 getoutpath = (T) -> joinpath(base_outpath,  "T$(T)")
 
 # LENNARD JONES

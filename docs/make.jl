@@ -1,11 +1,11 @@
 using Documenter
 
 makedocs(
-    sitename = "CumulantAnalysis.jl",
+    sitename = "CrystalCumulants.jl",
     authors = "Ethan Meitz & Alois Castellano",
     format = Documenter.HTML(
         prettyurls = get(ENV, "CI", "false") == "true",
-        canonical = "https://ejmeitz.github.io/CumulantAnalysis.jl",
+        canonical = "https://ejmeitz.github.io/CrystalCumulants.jl",
     ),
     pages = [
         "Home" => "index.md",
@@ -16,6 +16,6 @@ makedocs(
 )
 
 deploydocs(
-    repo = "github.com/ejmeitz/CumulantAnalysis.jl.git",
+    repo = "github.com/ejmeitz/CrystalCumulants.jl.git",
     devbranch = "main",
 )

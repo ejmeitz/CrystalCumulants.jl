@@ -19,7 +19,7 @@
 
 
 # # material = "SW_SILICON"
-# # get_basepath = (M) -> "/mnt/merged/emeitz/CumulantAnalysisTest/$(M)_LJ_size_effects"
+# # get_basepath = (M) -> "/mnt/merged/emeitz/CrystalCumulantsTest/$(M)_LJ_size_effects"
 # # temperatures = [100, 1300]
 # # F_true = [-4.2957902, -4.6756675]
 # # F_tol = 1e-3 # eV / atom
@@ -46,7 +46,7 @@
 # # )
 
 # material = "LJ_ARGON"
-# get_basepath = (M) -> "/mnt/merged/emeitz/CumulantAnalysisTest/$(M)_LJ_size_effects"
+# get_basepath = (M) -> "/mnt/merged/emeitz/CrystalCumulantsTest/$(M)_LJ_size_effects"
 # temperatures = [10, 80]
 # sizes = [3,4,5,6,7]
 

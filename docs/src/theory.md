@@ -8,7 +8,7 @@ Accurate finite-temperature calculations of vibrational thermodynamic properties
 
 The free energy cumulant expansion offers a computationally tractable alternative. Combined with renormalized self-consistent interatomic force constants (IFCs), exact evaluation of the first and second cumulants, and a rapidly convergent estimator for the reference potential energy, it estimates free energy, entropy, internal energy, and heat capacity **without** molecular dynamics or PIMD during IFC fitting or property evaluation.
 
-CumulantAnalysis.jl implements this workflow using sTDEP IFCs for the harmonic reference and sampling-based estimators for the temperature dependence of the reference energy \(V_0\).
+CrystalCumulants.jl implements this workflow using sTDEP IFCs for the harmonic reference and sampling-based estimators for the temperature dependence of the reference energy \(V_0\).
 
 ## Thermodynamic quantities
 
@@ -52,7 +52,7 @@ The harmonic contribution is a sum over phonon modes:
 \mathcal{F}_\mathrm{H} = \sum_{\mathbf{k}\lambda} \left[\frac{\hbar\omega_{\mathbf{k}\lambda}}{2} + \beta^{-1}\log\!\left(1-e^{-\beta\hbar\omega_{\mathbf{k}\lambda}}\right)\right],
 \]
 
-where \(\omega_{\mathbf{k}\lambda}\) is the frequency of the mode with wavevector \(\mathbf{k}\) on branch \(\lambda\). In CumulantAnalysis.jl, \(\mathcal{F}_\mathrm{H}\) (and the corresponding \(\mathcal{S}_\mathrm{H}\), \(\mathcal{U}_\mathrm{H}\), \(C_{V,\mathrm{H}}\)) are obtained by Brillouin-zone integration over renormalized phonon frequencies from the second-order IFCs. The `harmonic_q_mesh` keyword controls this grid.
+where \(\omega_{\mathbf{k}\lambda}\) is the frequency of the mode with wavevector \(\mathbf{k}\) on branch \(\lambda\). In CrystalCumulants.jl, \(\mathcal{F}_\mathrm{H}\) (and the corresponding \(\mathcal{S}_\mathrm{H}\), \(\mathcal{U}_\mathrm{H}\), \(C_{V,\mathrm{H}}\)) are obtained by Brillouin-zone integration over renormalized phonon frequencies from the second-order IFCs. The `harmonic_q_mesh` keyword controls this grid.
 
 Under the quantum harmonic approximation (HA), \(V_0\) is the potential energy at mechanical equilibrium and \(\mathcal{F}_\mathrm{anh} = 0\). Because \(V_0\) is temperature independent in the HA, it does not contribute to \(\mathcal{S}\), \(\mathcal{U}\), or \(C_V\).
 
@@ -136,7 +136,7 @@ When \(V \approx V_0 + V_2 + V_3 + V_4\), \(\mathcal{F}_1\) can be evaluated exa
 \left(n_{\mathbf{k}\lambda}+\frac{1}{2}\right)\left(n_{\mathbf{k}'\lambda'}+\frac{1}{2}\right),
 \]
 
-where \(\Phi\) is the quartic mode-coupling tensor and \(n_{\mathbf{k}\lambda} = (e^{\beta\hbar\omega_{\mathbf{k}\lambda}}-1)^{-1}\) is the Bose–Einstein occupation. In CumulantAnalysis.jl, \(\mathcal{F}_1\) is computed analytically by `free_energy_corrections` in LatticeDynamicsToolkit.jl (`free_energy_q_mesh`).
+where \(\Phi\) is the quartic mode-coupling tensor and \(n_{\mathbf{k}\lambda} = (e^{\beta\hbar\omega_{\mathbf{k}\lambda}}-1)^{-1}\) is the Bose–Einstein occupation. In CrystalCumulants.jl, \(\mathcal{F}_1\) is computed analytically by `free_energy_corrections` in LatticeDynamicsToolkit.jl (`free_energy_q_mesh`).
 
 ### Second cumulant \(\mathcal{F}_2\)
 

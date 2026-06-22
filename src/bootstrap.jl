@@ -16,11 +16,11 @@ function bootstrap_corrections(
     F_const, S_const, U_const, Cv_const = 
         calculate_cumulants(V, V₂, V₃, V₄, V_ref, T, ce, use_hot)
 
-    kBNat = CumulantAnalysis.kB * Nat
+    kBNat = CrystalCumulants.kB * Nat
 
     # non-dimensionalize
-    S₀ /= CumulantAnalysis.kB
-    Cᵥ₀ /= CumulantAnalysis.kB
+    S₀ /= CrystalCumulants.kB
+    Cᵥ₀ /= CrystalCumulants.kB
 
     F_total_point = F₀ + (F_const/Nat) + ac.F3 + ac.F4
     S_total_point = S₀ + (S_const/kBNat) + ac.S3 + ac.S4
@@ -221,7 +221,7 @@ end
 #     F_SEs = std(ΔFs, dims = 2); S_SEs = std(ΔSs, dims = 2)
 #     U_SEs = std(ΔUs, dims = 2); Cᵥ_SEs = std(ΔCᵥs, dims = 2)
 
-#     kBNat = CumulantAnalysis.kB * Nat
+#     kBNat = CrystalCumulants.kB * Nat
 
 #     F = BootstrapCumualantEstimate(
 #         F₀, SVector(ΔF...) ./ Nat, SVector(F_SEs...) ./ Nat,
@@ -229,7 +229,7 @@ end
 #     )
 
 #     S = BootstrapCumualantEstimate(
-#         S₀ / CumulantAnalysis.kB, SVector(ΔS...) ./ kBNat, SVector(S_SEs...) ./ kBNat,
+#         S₀ / CrystalCumulants.kB, SVector(ΔS...) ./ kBNat, SVector(S_SEs...) ./ kBNat,
 #         S_total_point / kBNat, std(S_totals) / kBNat, "S", "[kB / atom]"
 #     )
 
@@ -239,7 +239,7 @@ end
 #     )
 
 #     Cᵥ = BootstrapCumualantEstimate(
-#         Cᵥ₀ / CumulantAnalysis.kB, SVector(ΔCᵥ...) ./ kBNat, SVector(Cᵥ_SEs...) ./ kBNat,
+#         Cᵥ₀ / CrystalCumulants.kB, SVector(ΔCᵥ...) ./ kBNat, SVector(Cᵥ_SEs...) ./ kBNat,
 #         Cᵥ_total_point / kBNat, std(Cᵥ_totals) / kBNat, "Cv", "[kB / atom]"
 #     )
 

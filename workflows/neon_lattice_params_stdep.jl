@@ -1,5 +1,5 @@
 # Runs sTDEP for all the lattice parameter and temperature combinations
-using CumulantAnalysis
+using CrystalCumulants
 
 Ts = [4,6,8,10,12,14,16,18,20,22,24]
 r_cut = 6.955
@@ -11,8 +11,8 @@ n_lattice_params = 12
 n_iter = 10
 maximum_frequency = 2.5 # THz
 
-base_outpath = "/mnt/merged/emeitz/CumulantAnalysisTest/Neon_ThermalExpansion_IFCs_sTDEP"
-structures_basepath = (T,a) -> "/mnt/merged/emeitz/CumulantAnalysisTest/thermal_expansion_series/T$(T)/a$(a)"
+base_outpath = "/mnt/merged/emeitz/CrystalCumulantsTest/Neon_ThermalExpansion_IFCs_sTDEP"
+structures_basepath = (T,a) -> "/mnt/merged/emeitz/CrystalCumulantsTest/thermal_expansion_series/T$(T)/a$(a)"
 
 for i in 1:n_lattice_params
 

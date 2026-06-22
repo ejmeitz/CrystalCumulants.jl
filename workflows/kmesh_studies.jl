@@ -1,11 +1,11 @@
-using CumulantAnalysis
+using CrystalCumulants
 
 
 nconf = 100 # doesnt matter just looking at F1/F2 terms
 nboot = 10 # doesnt matter just looking at F1/F2 terms
 k_meshes = [5, 10, 15, 20, 25, 30, 35]
 
-base_outpath = "/mnt/merged/emeitz/CumulantAnalysisTest/KMESH_CONVERGENCE"
+base_outpath = "/mnt/merged/emeitz/CrystalCumulantsTest/KMESH_CONVERGENCE"
 
 #### NEON ####
 

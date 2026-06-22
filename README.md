@@ -1,12 +1,12 @@
-# CumulantAnalysis.jl
+# CrystalCumulants.jl
 
-[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://ejmeitz.github.io/CumulantAnalysis.jl)
+[![Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://ejmeitz.github.io/CrystalCumulants.jl)
 
 A fast implementation of the free energy cumulant expansion for crystals. The code is written in Julia, but we also provide a Python wrapper. There are two entry points to the code:
 - `make_stdep_ifcs` : Computes sTDEP IFCs (2nd through 4th order) for a specific temperature
 - `crystal_thermodynamic_properties` : Using the sTDEP IFCs computes the quantum-anharmonic thermodynamic properties using the free energy cumulant expansion.
 
-The discussion below pertains to the Julia package. Please see the [Python documentation](https://ejmeitz.github.io/CumulantAnalysis.jl/python/) or the README in the `python` directory for more details on installing and using the Python package. Full documentation: [https://ejmeitz.github.io/CumulantAnalysis.jl](https://ejmeitz.github.io/CumulantAnalysis.jl).
+The discussion below pertains to the Julia package. Please see the [Python documentation](https://ejmeitz.github.io/CrystalCumulants.jl/python/) or the README in the `python` directory for more details on installing and using the Python package. Full documentation: [https://ejmeitz.github.io/CrystalCumulants.jl](https://ejmeitz.github.io/CrystalCumulants.jl).
 
 > [!NOTE]
 > The energy from polar interactions is not accounted for. Even if this interaction is present in the `infile.forceconstant` file it will be ignored. The cumulant expansion theory is easily modified to incorporate the polar contribution, but the corresponding code was not implemented or tested.
@@ -25,10 +25,10 @@ using Pkg
 Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.1")
 ```
 
-Then install CumulantAnalysis.jl into the same environment as LatticeDynamicsToolkit.jl
+Then install CrystalCumulants.jl into the same environment as LatticeDynamicsToolkit.jl
 
 ```julia
-Pkg.add(; url = "https://github.com/ejmeitz/CumulantAnalysis.jl.git", rev = "v0.1.1")
+Pkg.add(; url = "https://github.com/ejmeitz/CrystalCumulants.jl.git", rev = "v0.1.1")
 ```
 
 Note that this package automatically installs LAMMPS and if a GPU is detected it will install a GPU version of LAMMPS. If you have compilation errors related to this open an issue. The GPU is not used, but can still cause headaches at compile time if your Linux is too "old".
@@ -42,17 +42,17 @@ Coming soon.
 
 To begin clone the repo, it contains some input files.
 ```
-git clone --depth 1 --branch v0.1.0 https://github.com/ejmeitz/CumulantAnalysis.jl.git
+git clone --depth 1 --branch v0.1.0 https://github.com/ejmeitz/CrystalCumulants.jl.git
 ```
 
 ##### sTDEP IFCs
-The first step is to get the 2nd, 3rd and 4th order force constants from sTDEP. Or skip to the [thermodynamic property](#thermodynamic-properties) section if you are familiar with sTDEP. The method implemented by CumulantAnalysis.jl expects self-consistent phonons (e.g. sTDEP or SSCHA). If you use a method like MD-TDEP or a finite-dispalcement method your results will be less accurate. An in-depth sTDEP tutorial can be found [here](https://github.com/tdep-developers/tdep-tutorials/tree/main/02_sampling), but I also provide a script to compute the IFCs automatically. A more compelx workflow (used in the paper) which loops over multiple volume, temperature pairs can be found [here](workflows/neon_lattice_params_stdep.jl).
+The first step is to get the 2nd, 3rd and 4th order force constants from sTDEP. Or skip to the [thermodynamic property](#thermodynamic-properties) section if you are familiar with sTDEP. The method implemented by CrystalCumulants.jl expects self-consistent phonons (e.g. sTDEP or SSCHA). If you use a method like MD-TDEP or a finite-dispalcement method your results will be less accurate. An in-depth sTDEP tutorial can be found [here](https://github.com/tdep-developers/tdep-tutorials/tree/main/02_sampling), but I also provide a script to compute the IFCs automatically. A more compelx workflow (used in the paper) which loops over multiple volume, temperature pairs can be found [here](workflows/neon_lattice_params_stdep.jl).
 
 The force constants obtained from this method can be found [here](data/stdep_results). Note that you will not get exactly the same numbers as sTDEP is stochastic, but the IFCs should converge to roughly the same values. The results can be found in the `iter009` folder, and take about a minute to obtain.
 
 
 ```julia
-using CumulantAnalysis.jl
+using CrystalCumulants.jl
 
 repo_root = "<path-to-repo-root>" #UPDATE
 outpath = "<whatever-directory-you-want>" # UPDATE
@@ -99,7 +99,7 @@ The next step is to compute the thermodynamic properties. You can use the IFCs f
 The free energy should be roughly -0.0179270 eV/atom. This value is stochastic, but the first few decimals should definitely match. On my computer this took ~3 minutes to run on 40 cores. The full set of expected results can be found [here](data/thermo_results). Note that these used a 25x25x25 mesh for the free energy.
 
 ```julia
-using CumulantAnalysis
+using CrystalCumulants
 
 repo_root = "<path-to-repo-root>" #UPDATE
 outpath = "<whatever-directory-you-want>" # UPDATE

@@ -1,8 +1,8 @@
 # cumulant-analysis
 
-Python wrapper for [CumulantAnalysis.jl](https://github.com/ejmeitz/CumulantAnalysis.jl).
+Python wrapper for [CrystalCumulants.jl](https://github.com/ejmeitz/CrystalCumulants.jl).
 
-Julia dependencies are managed automatically by [juliacall](https://juliapy.github.io/PythonCall.jl/stable/juliacall/) via `juliapkg.json` in this package. On first use, juliacall will set up a Julia environment, install `CumulantAnalysis` and its dependencies (including LAMMPS). This may take a few minutes. If you have NVIDIA GPUs this might install a CUDA artifact. That is not used, but I have not figured out a great way to prevent this from happening automatically.
+Julia dependencies are managed automatically by [juliacall](https://juliapy.github.io/PythonCall.jl/stable/juliacall/) via `juliapkg.json` in this package. On first use, juliacall will set up a Julia environment, install `CrystalCumulants` and its dependencies (including LAMMPS). This may take a few minutes. If you have NVIDIA GPUs this might install a CUDA artifact. That is not used, but I have not figured out a great way to prevent this from happening automatically.
 
 > [!IMPORTANT]
 > 1) Be sure to set `PYTHON_JULIACALL_HANDLE_SIGNALS=yes` in your environment or Python will not be able to pass through the threads to Julia. This will prevent Ctrl-C from working to kill the process. You will likely have to manually kill the process to end it.
