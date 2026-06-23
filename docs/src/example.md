@@ -19,27 +19,13 @@ Run the examples below from the repository root and update `repo_root` and `outp
 
 ### Step 1: sTDEP force constants
 
-The first step is to obtain 2nd-, 3rd-, and 4th-order interatomic force constants (IFCs) with stochastic TDEP (sTDEP). Skip to [Step 2](#Step-2:-Thermodynamic-properties) if you already have IFCs in TDEP format.
-
-CrystalCumulants.jl expects **self-consistent phonons** (sTDEP or SSCHA). MD-TDEP or finite-difference IFCs are far less accurate. An in-depth sTDEP tutorial is [here](https://github.com/tdep-developers/tdep-tutorials/tree/main/02_sampling).
+The first step is to obtain 2nd-, 3rd-, and 4th-order interatomic force constants (IFCs) with stochastic TDEP (sTDEP). CrystalCumulants.jl expects **self-consistent phonons** (sTDEP or SSCHA). MD-TDEP or finite-difference IFCs are far less accurate. An in-depth sTDEP tutorial is [here](https://github.com/tdep-developers/tdep-tutorials/tree/main/02_sampling).
 
 `make_stdep_ifcs` runs the sTDEP self-consistency loop and fits 3rd- and 4th-order IFCs from the final set of configurations. Second-order IFCs are iterated to convergence; the harmonic free energy at each iteration is written to `harmonic_free_energy.txt` so you can assess convergence with respect to `n_iter`.
-
-Precomputed IFCs are in [`data/stdep_results`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/stdep_results) (`iter009` folder; ~2 minutes to reproduce on a typical workstation). Results are stochastic, but should converge to roughly the same values.
-
-Additional sTDEP keyword arguments (forwarded via `kwargs` in Julia or `**kwargs` in Python):
-
-- `mix` — mix configurations from the prior iteration with the current step
-- `nconf_init` — number of configurations for iteration 0 (default 8)
-- `max_configs` — maximum configurations per iteration (doubles each iter; default 512)
 
 ### Step 2: Thermodynamic properties
 
 The second step evaluates vibrational thermodynamic properties using the cumulant expansion. Provide POSCAR files and TDEP-format IFCs (`infile.forceconstant`, `infile.forceconstant_thirdorder`, `infile.forceconstant_fourthorder`) along with LAMMPS potential commands for the true potential energy.
-
-For the bundled neon inputs at 24 K, the free energy should be roughly **−0.0179270 eV/atom** (stochastic; the first few decimals should match). On a 40-core machine this takes ~3 minutes. Reference results: [`data/thermo_results`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/thermo_results) (25×25×25 free-energy mesh).
-
-You can use IFCs from Step 1 or the precomputed set in [`data/thermo_inputs`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/thermo_inputs).
 
 !!! tip
     1. Set `JULIA_NUM_THREADS` or `PYTHON_JULIACALL_THREADS` for parallel execution.
@@ -67,6 +53,8 @@ See the [Theory](@ref Theory) page for background, the [Installation](@ref Insta
 ## Julia example
 
 ### sTDEP IFCs
+
+Precomputed IFCs are in [`data/stdep_results`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/stdep_results). The results of this script will be stored at `outpath` and should take about ~2 minutes to reproduce on a typical workstation. Results are stochastic, but should converge to roughly the same values.
 
 ```julia
 using CrystalCumulants
@@ -109,6 +97,10 @@ make_stdep_ifcs(
 ```
 
 ### Thermodynamic properties
+
+For the provided neon inputs at 24 K, the free energy should be roughly **−0.0179270 eV/atom** (stochastic; the first few decimals should match). On a 40-core machine this takes ~3 minutes. Reference results: [`data/thermo_results`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/thermo_results) (25×25×25 free-energy mesh).
+
+You can use IFCs from Step 1 or the precomputed set in [`data/thermo_inputs`](https://github.com/ejmeitz/CrystalCumulants.jl/tree/main/data/thermo_inputs).
 
 ```julia
 using CrystalCumulants

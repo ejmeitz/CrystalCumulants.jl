@@ -11,13 +11,6 @@ CrystalCumulants.jl depends on [LatticeDynamicsToolkit.jl](https://github.com/ej
 - Julia 1.10+
 - Linux (macOS may work; Windows is not supported)
 
-!!! tip
-    Set `JULIA_NUM_THREADS` in your environment **before** launching Julia. Thread count is fixed at startup and cannot be changed from within a running session.
-
-    ```bash
-    export JULIA_NUM_THREADS=40
-    ```
-
 ### Install
 
 ```julia
@@ -31,6 +24,13 @@ LAMMPS is installed automatically as a dependency. If a GPU is detected, a CUDA 
 ```julia
 using CrystalCumulants
 ```
+
+!!! tip
+    Set `JULIA_NUM_THREADS` in your environment **before** launching Julia. Thread count is fixed at startup and cannot be changed from within a running session.
+
+    ```bash
+    export JULIA_NUM_THREADS=40
+    ```
 
 ## Python
 
