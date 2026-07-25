@@ -1,11 +1,11 @@
-function calculate_cumulants(V, V₂, V₃, V₄, V_ref, T, ce::AnalyticalEstimator, use_hot::Bool)
-    c0 = CumulantData(V, V₂, V₃, V₄, V_ref, T, Val{0}(), ce, use_hot = use_hot)
+function calculate_cumulants(V, V₂, V₃, V₄, V_ref, dV_ref_dT, T, ce::AnalyticalEstimator, use_hot::Bool)
+    c0 = CumulantData(V, V₂, V₃, V₄, V_ref, dV_ref_dT, T, Val{0}(), ce, use_hot = use_hot)
     return constant_corrections(c0, T)
 end
 
 # F0/S0/U0/Cv0 should be per atom
 function bootstrap_corrections(
-        V, V₂, V₃, V₄, V_ref, T,
+        V, V₂, V₃, V₄, V_ref, dV_ref_dT, T,
         F₀, S₀, U₀, Cᵥ₀,
         ac, # analytical corrections
         ce::AnalyticalEstimator, 
@@ -14,7 +14,7 @@ function bootstrap_corrections(
     ) where {L <: Limit}
 
     F_const, S_const, U_const, Cv_const = 
-        calculate_cumulants(V, V₂, V₃, V₄, V_ref, T, ce, use_hot)
+        calculate_cumulants(V, V₂, V₃, V₄, V_ref, dV_ref_dT, T, ce, use_hot)
 
     kBNat = CrystalCumulants.kB * Nat
 
@@ -36,7 +36,7 @@ function bootstrap_corrections(
     for i in 1:ce.n_boot
         sample!(1:length(V), is; replace = true)
         ΔFs[i], ΔSs[i], ΔUs[i], ΔCᵥs[i] =
-             calculate_cumulants(V[is], V₂[is], V₃[is], V₄[is], V_ref[is], T, ce, use_hot)
+             calculate_cumulants(V[is], V₂[is], V₃[is], V₄[is], V_ref[is], dV_ref_dT[is], T, ce, use_hot)
         next!(p)
     end
     finish!(p)
@@ -73,7 +73,7 @@ end
 
 # Potentially useful for gauging convergence of different approaches
 # Bootstrap estimates error on zeroth-order corrections (F, S, U, Cv) vs sample size
-function do_size_study(ce::AnalyticalEstimator, outpath, V, V₂, V₃, V₄, V_ref, T, n_atoms, use_hot)
+function do_size_study(ce::AnalyticalEstimator, outpath, V, V₂, V₃, V₄, V_ref, dV_ref_dT, T, n_atoms, use_hot)
 
     min_samples = (length(V) < 500) ? 10 : 100
 
@@ -100,9 +100,10 @@ function do_size_study(ce::AnalyticalEstimator, outpath, V, V₂, V₃, V₄, V_
         V₃_sub = V₃[subset_idxs]
         V₄_sub = V₄[subset_idxs]
         V_ref_sub = V_ref[subset_idxs]
+        dV_ref_dT_sub = dV_ref_dT[subset_idxs]
 
         # Get Point Estimate of Mean
-        c0 = CumulantData(V_sub, V₂_sub, V₃_sub, V₄_sub, V_ref_sub, T, Val{0}(), ce, use_hot = use_hot)
+        c0 = CumulantData(V_sub, V₂_sub, V₃_sub, V₄_sub, V_ref_sub, dV_ref_dT_sub, T, Val{0}(), ce, use_hot = use_hot)
         F_point[i], S_point[i], U_point[i], Cv_point[i] = constant_corrections(c0, T)
 
         # Do bootstrap to estimate standard error
@@ -116,8 +117,9 @@ function do_size_study(ce::AnalyticalEstimator, outpath, V, V₂, V₃, V₄, V_
             V₃_samples = V₃_sub[boot_idxs]
             V₄_samples = V₄_sub[boot_idxs]
             V_ref_samples = V_ref_sub[boot_idxs]
+            dV_ref_dT_samples = dV_ref_dT_sub[boot_idxs]
 
-            c0 = CumulantData(V_samples, V₂_samples, V₃_samples, V₄_samples, V_ref_samples, T, Val{0}(), ce, use_hot = use_hot)
+            c0 = CumulantData(V_samples, V₂_samples, V₃_samples, V₄_samples, V_ref_samples, dV_ref_dT_samples, T, Val{0}(), ce, use_hot = use_hot)
             Fs[i, j], Ss[i, j], Us[i, j], Cvs[i, j] = constant_corrections(c0, T)
 
             next!(p)

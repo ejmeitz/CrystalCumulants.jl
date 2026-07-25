@@ -47,7 +47,7 @@ function estimate(
     F₀, S₀, U₀, Cᵥ₀ = Hartree_to_eV .* harmonic_properties(T, uc, ifc_kwargs.ifc2, harmonic_q_mesh, L;
                                                  n_threads = n_threads)
 
-    tep_energies, V, V₂_tilde = make_energy_dataset(
+    tep_energies, V, V₂_tilde, dV₂_tilde_dT = make_energy_dataset(
         settings,
         uc,
         sc,
@@ -61,12 +61,12 @@ function estimate(
     V₄ = getindex.(tep_energies, 3)
     Vₚ = zeros(length(V))
 
-    header = ["V" "Vp" "V2" "V3" "V4" "V2_tilde"]
+    header = ["V" "Vp" "V2" "V3" "V4" "V2_tilde" "dV2_tilde_dT"]
     str_fmt_str = (N) -> Printf.Format(join(fill("%15s", N), " "))
     open(joinpath(outpath, "outfile.all_energies"), "w") do f
         println(f, "# Energies in eV, N atoms = $(n_atoms), tempearture [K] = $(T)")
         println(f, Printf.format(str_fmt_str(length(header)), header...))
-        writedlm(f, [V Vₚ V₂ V₃ V₄ V₂_tilde])
+        writedlm(f, [V Vₚ V₂ V₃ V₄ V₂_tilde dV₂_tilde_dT])
     end
 
     # Get analytical corrections
@@ -83,9 +83,11 @@ function estimate(
 
     # If classical V2 should == V2_tilde....
     V_ref = quantum ? V₂_tilde : V₂
+    # Classical dV₂_tilde_dT is already zero from LDT; keep quantum-only path explicit
+    dV_ref_dT = quantum ? dV₂_tilde_dT : zero(V₂)
 
     res = bootstrap_corrections(
-            V, V₂, V₃, V₄, V_ref, T,
+            V, V₂, V₃, V₄, V_ref, dV_ref_dT, T,
             F₀, S₀, U₀, Cᵥ₀,
             analytical_corrections,
             ce,
@@ -97,7 +99,7 @@ function estimate(
     write_result && save.(res, Ref(outpath), Ref(ce.n_boot))
 
     # Compute some statistics to assess convergence with N
-    size_study && do_size_study(ce, outpath, V, V₂, V₃, V₄, V_ref, T, n_atoms, use_hot)
+    size_study && do_size_study(ce, outpath, V, V₂, V₃, V₄, V_ref, dV_ref_dT, T, n_atoms, use_hot)
 
     return res, ifc_kwargs.ifc2
 end
