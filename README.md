@@ -27,7 +27,7 @@ CrystalCumulants.jl depends on [LatticeDynamicsToolkit.jl](https://github.com/ej
 
 ```julia
 using Pkg
-Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.4")
+Pkg.add(; url = "https://github.com/ejmeitz/LatticeDynamicsToolkit.jl.git", rev = "v0.1.3")
 Pkg.add(; url = "https://github.com/ejmeitz/CrystalCumulants.jl.git", rev = "v0.1.1")
 ```
 
