@@ -1,7 +1,7 @@
 name = "CrystalCumulants"
 uuid = "d62e69c9-3f2a-4699-bf0d-85fb75dc8589"
 authors = ["Ethan Meitz <emeitz@andrew.cmu.edu>", "Alois Castellano"]
-version = "0.0.1"
+version = "0.1.1"
 
 [deps]
 AtomsBase = "a963bdd2-2df7-4f54-a1ee-49d51e6be12a"
