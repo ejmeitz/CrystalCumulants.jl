@@ -5,7 +5,7 @@ nconf = 100_000
 nboot = 5000
 
 quantum = true
-base_outpath = "/mnt/merged/emeitz/CrystalCumulantsTest/Neon_ANALYTICAL_PIMD"
+base_outpath = "/mnt/merged/emeitz/CrystalCumulantsTest/Neon_ANALYTICAL_sTDEP"
 getoutpath = (T) -> joinpath(base_outpath,  "T$(T)")
 
 Ts = [4,6,8,10,12,14,16,18,20,22,24]
