@@ -10,7 +10,7 @@ range of temperatures using the free energy cumulant expansion.
 All path-like parameters may be passed as a single string, or as a function 
 which takes on parameters (temperature) and returns a string. For example,
 '''julia
-make_ucposcar_path = (T) -> joinpath("/home/user", "infile.ucposcar$(T)")
+make_ucposcar_path = (T) -> joinpath("/home/user", "infile.ucposcar\$(T)")
 ucposcar_path = "/home/user/infile.ucposcar"
 '''
 

@@ -205,10 +205,39 @@ For heat capacity, define ``W \equiv \mathrm{cov}_\mathrm{H}(Y,\,\widetilde{V}_2
 ```math
 C_{V,0} = -T\frac{\partial^2 V_0}{\partial T^2}
 = \frac{2W}{k_\mathrm{B} T^2}
-- \frac{1}{k_\mathrm{B}}\frac{\partial W}{\partial T},
+- \frac{1}{k_\mathrm{B} T}\frac{\partial W}{\partial T}.
 ```
 
-and applying the covariance derivative formula to ``W`` gives
+Because ``\widetilde{V}_2`` depends explicitly on temperature through the Bose weight
+``g_{\mathbf{k}\lambda}(T)=\mathrm{sech}^2\!\big(\hbar\omega_{\mathbf{k}\lambda}/(2k_\mathrm{B}T)\big)``,
+
+```math
+\frac{\partial W}{\partial T}
+=
+\frac{1}{k_\mathrm{B} T^2}
+\Big[
+\mathrm{cov}_\mathrm{H}\!\left(Y\widetilde{V}_2,\,\widetilde{V}_2\right)
+- \langle \widetilde{V}_2 \rangle_\mathrm{H}\,\mathrm{cov}_\mathrm{H}(Y,\,\widetilde{V}_2)
+- \langle Y \rangle_\mathrm{H}\,\mathrm{var}_\mathrm{H}(\widetilde{V}_2)
+\Big]
++
+\mathrm{cov}_\mathrm{H}\!\left(Y,\,\frac{\partial\widetilde{V}_2}{\partial T}\right),
+```
+
+where the last term uses the explicit derivative at fixed mode amplitudes,
+
+```math
+\frac{\partial\widetilde{V}_2}{\partial T}
+=
+\frac{1}{2T}\sum_{\mathbf{k}\lambda}
+x_{\mathbf{k}\lambda}\,\tanh\!\left(\frac{x_{\mathbf{k}\lambda}}{2}\right)
+\mathrm{sech}^2\!\left(\frac{x_{\mathbf{k}\lambda}}{2}\right)
+\omega_{\mathbf{k}\lambda}^2\, q_{\mathbf{k}\lambda}^2,
+\qquad
+x_{\mathbf{k}\lambda}=\frac{\hbar\omega_{\mathbf{k}\lambda}}{k_\mathrm{B}T}.
+```
+
+Assembling these pieces gives
 
 ```math
 \begin{aligned}
@@ -220,11 +249,14 @@ C_{V,0} =
 - \langle \widetilde{V}_2 \rangle_\mathrm{H}\,\mathrm{cov}_\mathrm{H}(Y,\,\widetilde{V}_2) \\
 &\qquad\qquad\qquad\qquad\qquad
 - \langle Y \rangle_\mathrm{H}\,\mathrm{cov}_\mathrm{H}(\widetilde{V}_2,\,\widetilde{V}_2)
-\Big].
+\Big]
+-\frac{1}{k_\mathrm{B} T}\,\mathrm{cov}_\mathrm{H}\!\left(Y,\,\frac{\partial\widetilde{V}_2}{\partial T}\right).
 \end{aligned}
 ```
 
-``C_{V,0}`` is expected to be less accurate than ``\mathcal{S}_0`` because it involves a second temperature derivative. These estimators are implemented in `cumulant_corrections.jl` via sample covariances over harmonic configurations (`nconf` samples; `nboot` for error bars on ``V_0`` and ``\mathcal{S}_0``).
+In the classical limit, ``\widetilde{V}_2=V_2`` and ``\partial\widetilde{V}_2/\partial T=0`` (fixed IFCs), so the extra covariance vanishes. This term does not affect ``\mathcal{S}_0``, which depends only on the first temperature derivative of ``\langle Y\rangle_\mathrm{H}``.
+
+``C_{V,0}`` is expected to be less accurate than ``\mathcal{S}_0`` because it involves a second temperature derivative. These estimators are implemented in `cumulant_corrections.jl` via sample covariances over harmonic configurations (`nconf` samples; `nboot` for error bars on ``V_0`` and ``\mathcal{S}_0``). The per-configuration ``\partial\widetilde{V}_2/\partial T`` is accumulated alongside ``\widetilde{V}_2`` in LatticeDynamicsToolkit.
 
 In the output files, the 0th-order row is labeled `_offset` (corresponding to ``V_0`` and its derivatives); only this term includes bootstrap standard errors.
 
