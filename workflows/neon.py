@@ -6,7 +6,7 @@ nconf = 100_000
 nboot = 5000
 
 quantum = True
-base_outpath = "/home/emeitz/Neon_ANALYTICAL_PIMD"
+base_outpath = "/home/emeitz/Neon_ANALYTICAL_sTDEP_Py"
 getoutpath = lambda T: join(base_outpath, f"T{T}")
 
 Ts = [4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24]
