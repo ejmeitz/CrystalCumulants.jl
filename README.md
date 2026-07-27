@@ -13,7 +13,7 @@ A fast implementation of the free energy cumulant expansion for crystals. The co
 > [!TIP]
 > 1. Be sure to set `JULIA_NUM_THREADS` or `PYTHON_JULIACALL_THREADS` in your environment to enable multi-threading of the code!
 > 2. Always use the primitive cell. The number of atoms in the primitive cell dictates the computational cost and RAM usage (lower is better).
-> 3. The `free_energy_q_mesh` and `nconf` dictate runtime for a given primitive cell. It is recommended to run a convergence study to assess what grid size and how many samples are needed to get converged results and minimize runtime.
+> 3. The `free_energy_q_mesh` and `nconf` dictate runtime for a given primitive cell. It is recommended to run a convergence study to assess what grid size and how many samples are needed to get converged results and minimize runtime. The `size_study` kwarg can do this automatically for `nconf` within a single calculation.
 
 Full documentation: [https://ejmeitz.github.io/CrystalCumulants.jl](https://ejmeitz.github.io/CrystalCumulants.jl)
 
